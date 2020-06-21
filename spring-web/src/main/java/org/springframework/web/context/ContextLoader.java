@@ -134,6 +134,7 @@ public class ContextLoader {
 
 	private static final Properties defaultStrategies;
 
+	// 静态获取属性，只与框架内部相关
 	static {
 		// Load default strategy implementations from properties file.
 		// This is currently strictly internal and not meant to be customized

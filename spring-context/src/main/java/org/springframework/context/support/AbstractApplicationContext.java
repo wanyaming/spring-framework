@@ -526,10 +526,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// Tell the subclass to refresh the internal bean factory.
 			//告诉子类启动refreshBeanFactory()方法，Bean定义资源文件的载入从
 			//子类的refreshBeanFactory()方法启动
+			// *** 使ApplicationContext具备BeanFactory的全部功能
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
-			//为BeanFactory配置容器特性，例如类加载器、事件处理器等
+			//为BeanFactory配置容器特性，例如类加载器、事件处理器、SpEL表达式、AspectJ的支持
 			prepareBeanFactory(beanFactory);
 
 			try {
@@ -543,7 +544,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Register bean processors that intercept bean creation.
 				//为BeanFactory注册BeanPost事件处理器.
-				//BeanPostProcessor是Bean后置处理器，用于监听容器触发的事件
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
@@ -560,10 +560,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Check for listener beans and register them.
 				//为事件传播器注册事件监听器.
+				// 主要是注册所有的ApplicationListener
+				// 当发送事件的时候，也是遍历全部的listener，通过线程池的方式，去调用#onApplicationEvent
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
-				//初始化所有剩余的单例Bean
+				// 初始化所有剩余的单例Bean
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
@@ -655,6 +657,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 		// Tell the internal bean factory to use the context's class loader etc.
 		beanFactory.setBeanClassLoader(getClassLoader());
+		// 增加表达式处理器，#{}
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 

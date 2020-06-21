@@ -100,6 +100,7 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
+		// 初始化wac（默认是XmlWebApplicationContext，定义于ContextLoader.properties）
 		initWebApplicationContext(event.getServletContext());
 	}
 

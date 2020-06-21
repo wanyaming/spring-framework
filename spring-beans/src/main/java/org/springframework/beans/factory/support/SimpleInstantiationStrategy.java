@@ -125,6 +125,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			return (args != null ? BeanUtils.instantiateClass(ctor, args) : BeanUtils.instantiateClass(ctor));
 		}
 		else {
+			// 存在需要覆盖或替换的方法，需要使用cglib进行动态代理
 			return instantiateWithMethodInjection(bd, beanName, owner, ctor, args);
 		}
 	}

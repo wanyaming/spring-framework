@@ -514,6 +514,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	@Override
 	public void afterPropertiesSet() {
 		// Do this first, it may add ResponseBody advice beans
+		// 处理@ControllerAdvice注解，也就是全局异常类的实现原理
 		initControllerAdviceCache();
 
 		if (this.argumentResolvers == null) {
@@ -530,6 +531,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		}
 	}
 
+	// TODO 为什么这个类没有解析 @ExceptionHandler 相关的
 	private void initControllerAdviceCache() {
 		if (getApplicationContext() == null) {
 			return;
@@ -562,12 +564,14 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 					logger.info("Detected @InitBinder methods in " + adviceBean);
 				}
 			}
+			// 一般使用场景是解密json
 			if (RequestBodyAdvice.class.isAssignableFrom(beanType)) {
 				requestResponseBodyAdviceBeans.add(adviceBean);
 				if (logger.isInfoEnabled()) {
 					logger.info("Detected RequestBodyAdvice bean in " + adviceBean);
 				}
 			}
+			// 一般使用场景是加密json
 			if (ResponseBodyAdvice.class.isAssignableFrom(beanType)) {
 				requestResponseBodyAdviceBeans.add(adviceBean);
 				if (logger.isInfoEnabled()) {

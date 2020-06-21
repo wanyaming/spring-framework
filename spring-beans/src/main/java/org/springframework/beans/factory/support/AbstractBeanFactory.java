@@ -225,8 +225,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 			//获取给定Bean的实例对象，主要是完成FactoryBean的相关处理
-			//注意：BeanFactory是管理容器中Bean的工厂，而FactoryBean是
-			//创建创建对象的工厂Bean，两者之间有区别
+			//注意：BeanFactory是管理容器中Bean的工厂
+			//而FactoryBean是创建创建对象的工厂Bean，两者之间有区别
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 
@@ -246,6 +246,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			//的父级容器去查找，如果还是找不到则沿着容器的继承体系向父级容器查找
 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			//当前容器的父级容器存在，且当前容器中不存在指定名称的Bean
+
+			// 从父容器查找
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
 				//解析指定Bean名称的原始名称
@@ -313,7 +315,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 							throw ex;
 						}
 					});
-					//获取给定Bean的实例对象
+					// 这里只是处理下工厂bean的逻辑
 					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
 
@@ -1645,10 +1647,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		//使用工厂Bean创建一个Bean的实例对象
 		Object object = null;
 		if (mbd == null) {
-			//从Bean工厂缓存中获取给定名称的Bean实例对象
+			// 从beanFactory缓存中获取
 			object = getCachedObjectForFactoryBean(beanName);
 		}
-		//让Bean工厂生产给定名称的Bean对象实例
+		// 由beanFactory创建
 		if (object == null) {
 			// Return bean instance from factory.
 			FactoryBean<?> factory = (FactoryBean<?>) beanInstance;

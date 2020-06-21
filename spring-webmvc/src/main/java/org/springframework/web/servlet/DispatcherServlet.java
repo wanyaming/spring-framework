@@ -965,6 +965,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 				// Determine handler adapter for the current request.
 				//3. 获取处理request的处理器适配器handler adapter
+				// 这个适配器包括了很多Spring mvc组件相关的功能
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
